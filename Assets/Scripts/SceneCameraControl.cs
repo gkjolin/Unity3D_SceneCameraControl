@@ -1,3 +1,5 @@
+using System;
+using UnityEditor;
 using UnityEngine;
 
 public class SceneCameraControl : MonoBehaviour
@@ -26,6 +28,10 @@ public class SceneCameraControl : MonoBehaviour
         "Mouse ScrollWheel"
     };
 
+    public bool resetCameraSettings = false;
+    public Vector3 resetCameraPosition = Vector3.zero;
+    public Vector3 resetCameraRotation = Vector3.zero;
+
     public MouseMove moveTrigger = MouseMove.ScrollWheel;
     public bool enableMove = true;
     public bool invertMoveDirection = false;
@@ -45,14 +51,14 @@ public class SceneCameraControl : MonoBehaviour
     public bool smoothRotate = true;
     public float smoothRotateSpeed = 10f;
 
-    public MouseButton gripTrigger = MouseButton.Middle;
-    public bool enableGrip = true;
-    public bool invertGripDirection = false;
-    public float gripSpeed = 3f;
-    public bool limitGripX = false;
-    public bool limitGripY = false;
-    public bool smoothGrip = true;
-    public float smoothGripSpeed = 10f;
+    public MouseButton dragTrigger = MouseButton.Middle;
+    public bool enableDrag = true;
+    public bool invertDragDirection = false;
+    public float dragSpeed = 3f;
+    public bool limitDragX = false;
+    public bool limitDragY = false;
+    public bool smoothDrag = true;
+    public float smoothDragSpeed = 10f;
 
     void Start()
     {
@@ -60,11 +66,12 @@ public class SceneCameraControl : MonoBehaviour
         this.rotateTarget = this.transform.forward;
     }
 
-	void Update ()
+    void Update()
     {
         Move();
         Rotate();
-        Grip();
+        Drag();
+        Reset();
     }
 
     // 入力が有効なときだけ target を更新します。
@@ -160,44 +167,59 @@ public class SceneCameraControl : MonoBehaviour
         }
     }
 
-    private void Grip()
+    private void Drag()
     {
-        if (!this.enableGrip)
+        if (!this.enableDrag)
         {
             return;
         }
 
         // direction の方向が Move, Rotate と逆方向な点に注意する。
 
-        float direction = this.invertGripDirection ? 1 : -1;
+        float direction = this.invertDragDirection ? 1 : -1;
         float mouseX = Input.GetAxis(SceneCameraControl.MouseMoveString[(int)MouseMove.X]) * direction;
         float mouseY = Input.GetAxis(SceneCameraControl.MouseMoveString[(int)MouseMove.Y]) * direction;
 
-        if (Input.GetMouseButton((int)this.gripTrigger))
+        if (Input.GetMouseButton((int)this.dragTrigger))
         {
             this.moveTarget = this.transform.position;
 
-            if (!this.limitGripX)
+            if (!this.limitDragX)
             {
-                this.moveTarget += this.transform.right * mouseX * gripSpeed;
+                this.moveTarget += this.transform.right * mouseX * dragSpeed;
             }
 
-            if (!this.limitGripY)
+            if (!this.limitDragY)
             {
-                this.moveTarget += Vector3.up * mouseY * gripSpeed;
+                this.moveTarget += Vector3.up * mouseY * dragSpeed;
             }
         }
 
-        if (this.smoothGrip)
+        if (this.smoothDrag)
         {
             this.transform.position =
                 Vector3.Lerp(this.transform.position,
                              this.moveTarget,
-                             Time.deltaTime * this.smoothGripSpeed);
+                             Time.deltaTime * this.smoothDragSpeed);
         }
         else
         {
             this.transform.position = this.moveTarget;
         }
+    }
+
+    private void Reset()
+    {
+        if (!this.resetCameraSettings)
+        {
+            return;
+        }
+
+        this.transform.position = this.resetCameraPosition;
+        this.transform.rotation = Quaternion.Euler(this.resetCameraRotation);
+        this.moveTarget = this.transform.position;
+        this.rotateTarget = this.transform.forward;
+
+        this.resetCameraSettings = false;
     }
 }
