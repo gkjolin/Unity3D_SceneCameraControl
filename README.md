@@ -18,4 +18,6 @@ Camera 以外にも適用することができますが、特に意味はない�
 
 ## ScreenShot
 
-![](https://github.com/XJINE/Unity3D_SceneCameraControl/blob/master/ScreenShot.png)
+![](https://github.com/XJINE/Unity3D_SceneCameraControl/blob/master/screenshot01.gif)
+![](https://github.com/XJINE/Unity3D_SceneCameraControl/blob/master/screenshot02.png)
+
