@@ -57,6 +57,7 @@ public class SceneCameraControl : MonoBehaviour
     void Start()
     {
         this.moveTarget = this.transform.position;
+        this.rotateTarget = this.transform.forward;
     }
 
 	void Update ()
