@@ -1,5 +1,3 @@
-using System;
-using UnityEditor;
 using UnityEngine;
 
 public class SceneCameraControl : MonoBehaviour
@@ -96,17 +94,17 @@ public class SceneCameraControl : MonoBehaviour
 
             if (this.limitMoveX)
             {
-                this.moveTarget.x = 0;
+                this.moveTarget.x = this.transform.position.x;
             }
 
             if (this.limitMoveY)
             {
-                this.moveTarget.y = 0;
+                this.moveTarget.y = this.transform.position.y;
             }
 
             if (this.limitMoveZ)
             {
-                this.moveTarget.z = 0;
+                this.moveTarget.z = this.transform.position.z;
             }
         }
 
